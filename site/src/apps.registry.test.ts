@@ -14,14 +14,13 @@ describe('app registry', () => {
     }
   })
 
-  it('keeps Starboard clearly marked as a template with a placeholder URL', () => {
+  it('keeps Starboard marked as an example and points to its deployed demo', () => {
     const starboard = apps.find((app) => app.id === 'starboard')
 
     expect(starboard).toMatchObject({
-      status: 'planned',
-      placeholderUrl: 'https://example.com/',
+      status: 'live',
+      liveUrl: 'https://thevault.github.io/starboard/',
     })
-    expect(starboard?.description).toMatch(/template\/example/i)
-    expect(starboard?.liveUrl).toBeUndefined()
+    expect(starboard?.exampleNotice).toMatch(/not a real product/i)
   })
 })

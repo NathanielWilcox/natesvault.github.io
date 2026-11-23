@@ -50,7 +50,7 @@ function AppCard({ app }: { app: VaultApp }) {
         <span className="app-icon" aria-hidden="true">{app.icon}</span>
         <StatusBadge status={app.status} />
       </div>
-      {app.placeholderUrl && <p className="placeholder-label">Template/example only — not a real product</p>}
+      {app.exampleNotice && <p className="placeholder-label">{app.exampleNotice}</p>}
       <h2>{app.name}</h2>
       <p className="card-description">{app.description}</p>
       <div className="tag-list" aria-label="Tags">
@@ -71,11 +71,11 @@ function HomePage() {
         <p className="eyebrow">PROJECT DIRECTORY</p>
         <h1>Everything in its place.</h1>
         <p className="hero-copy">
-          The Vault is the front door to a collection of independent projects.
-          Browse their details, read their docs, and visit externally hosted apps.
+          The Vault is the front door to independent projects.
+          Browse their details, read their docs, and launch their separately deployed apps.
         </p>
         <p className="hosting-note">
-          The Vault is a catalog only. It does not run or host the apps listed here.
+          The Vault catalog links to static apps deployed separately from its interface.
         </p>
       </section>
       <section className="catalog-section" aria-labelledby="catalog-heading">
@@ -139,9 +139,9 @@ function AppDetailPage() {
             </button>
           )}
         </div>
-        {app.placeholderUrl && (
+        {app.exampleNotice && (
           <p className="hosting-note detail-hosting-note">
-            {app.placeholderUrl} is a placeholder URL, not a deployment. This entry is a template/example, not a real product.
+            {app.exampleNotice}
           </p>
         )}
         {app.liveUrl && (

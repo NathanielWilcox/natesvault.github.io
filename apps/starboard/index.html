@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111827" />
+    <meta name="description" content="A small interactive counter demo for The Vault." />
+    <title>Starboard Counter Demo</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="counter-card">
+      <a class="back-link" href="../">← The Vault</a>
+      <p class="eyebrow">STARBOARD · TEMPLATE DEMO</p>
+      <h1>Counter</h1>
+      <p class="intro">A small static app to test The Vault launch link.</p>
+      <output class="count" id="count" aria-live="polite" aria-label="Current count">0</output>
+      <div class="controls" aria-label="Counter controls">
+        <button id="decrement" type="button" aria-label="Decrease count">−</button>
+        <button id="reset" type="button">Reset</button>
+        <button id="increment" type="button" aria-label="Increase count">+</button>
+      </div>
+      <p class="note">This is a demo template, not a real product.</p>
+    </main>
+    <script type="module">
+      import { initializeCounter } from './counter.js'
+
+      initializeCounter()
+    </script>
+  </body>
+</html>

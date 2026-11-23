@@ -22,7 +22,7 @@ describe('Vault routes', () => {
       expect(screen.getAllByText(statusLabel).length).toBeGreaterThan(0)
     }
 
-    expect(screen.getByText('Template/example only — not a real product')).toBeInTheDocument()
+    expect(screen.getByText(/Template\/example only — Starboard is not a real product/)).toBeInTheDocument()
   })
 
   it.each(apps)('renders the $name detail page from its registry entry', (app) => {
@@ -52,13 +52,15 @@ describe('Vault routes', () => {
     expect(screen.getByRole('navigation', { name: 'Table of contents' })).toBeInTheDocument()
   })
 
-  it('shows Starboard as a non-launchable example with a plain-text placeholder URL', () => {
+  it('shows Starboard as a launchable demo example, not a real product', () => {
     renderAt('/apps/starboard')
 
     expect(screen.getByRole('heading', { name: 'Starboard' })).toBeInTheDocument()
-    expect(screen.getByText(/is a placeholder URL, not a deployment/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Launch unavailable' })).toBeDisabled()
-    expect(screen.queryByRole('link', { name: /Launch externally/ })).not.toBeInTheDocument()
+    expect(screen.getByText(/Starboard is not a real product/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Launch externally/ })).toHaveAttribute(
+      'href',
+      'https://thevault.github.io/starboard/',
+    )
   })
 
   it('adds an external launch link only when a live URL exists', () => {

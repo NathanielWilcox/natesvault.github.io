@@ -36,6 +36,13 @@ jobs:
       - name: Test site with coverage
         run: npm run test:coverage
         working-directory: site
+      - name: Add Starboard demo to Pages artifact
+        run: |
+          mkdir -p site/dist/starboard
+          cp apps/starboard/index.html apps/starboard/style.css apps/starboard/counter.js site/dist/starboard/
+          test -f site/dist/starboard/index.html
+          test -f site/dist/starboard/style.css
+          test -f site/dist/starboard/counter.js
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
