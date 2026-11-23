@@ -1,0 +1,44 @@
+export type AppStatus = 'planned' | 'in-progress' | 'live'
+
+export interface VaultApp {
+  id: string
+  name: string
+  description: string
+  icon: string
+  status: AppStatus
+  tags: string[]
+  repoPath: string
+  docsPath: string
+  techStack: string[]
+  localRun: string[]
+  liveUrl?: string
+  placeholderUrl?: string
+}
+
+export const apps: VaultApp[] = [
+  {
+    id: 'starboard',
+    name: 'Starboard',
+    description: 'A template/example site only; Starboard is not a real product.',
+    icon: '🚀',
+    status: 'planned',
+    tags: ['productivity', 'dashboard', 'sample'],
+    repoPath: 'apps/starboard',
+    docsPath: 'apps/starboard/README.md',
+    techStack: ['React', 'TypeScript', 'Vite'],
+    localRun: ['# Template/example only; no runnable product exists.'],
+    placeholderUrl: 'https://example.com/',
+  },
+  {
+    id: 'field-notes',
+    name: 'Field Notes',
+    description: 'An in-progress home for collecting notes, references, and small discoveries.',
+    icon: '🗒️',
+    status: 'in-progress',
+    tags: ['notes', 'research', 'sample'],
+    repoPath: 'apps/field-notes',
+    docsPath: 'apps/field-notes/README.md',
+    techStack: ['TypeScript', 'Vite'],
+    localRun: ['# No runnable implementation yet; this project is in progress.'],
+  },
+]

@@ -1,0 +1,7 @@
+site/node_modules/
+site/dist/
+site/coverage/
+
+# Editor and OS files
+.DS_Store
+*.log
