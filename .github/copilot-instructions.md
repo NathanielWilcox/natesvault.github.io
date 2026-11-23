@@ -41,8 +41,9 @@ if the user says "normal mode."
 - **Offer one next step at a time** when multiple actions exist. [reference:14]
 
 ## 4. Project guardrails (non-negotiable)
-- **Static only.** Deployed to GitHub Pages at `thevault.github.io`. No
-  server-side rendering, no Python runtime, no Docker at serve time.
+- **Static only.** Deployed to GitHub Pages at
+  `nathanielwilcox.github.io/natesvault.github.io/`. No server-side rendering,
+  no Python runtime, no Docker at serve time.
 - **Stack:** Vite + React + TypeScript (strict). `HashRouter` for SPA routing.
 - **Single source of truth:** `site/src/apps.registry.ts`. Nav tabs, home
   cards, detail pages, and docs all derive from it. Never hard-code app names.
@@ -54,6 +55,8 @@ if the user says "normal mode."
   it does not execute them in-page.
 - **All apps visible** with status badges: `planned | in-progress | live`.
 - **Launch links only** for running apps. The Vault never embeds or executes them.
+- **Launch behavior:** open `liveUrl` when present. Otherwise, show configured
+  `localRun` commands with a copy option; never execute shell commands in-browser.
 - **Test every app and page:** registry-driven tests must cover each app's detail
   and docs routes. Add focused tests for every new page or route behavior.
 - **Enforce per-page coverage:** keep each page component in

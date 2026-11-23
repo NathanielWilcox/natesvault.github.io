@@ -19,7 +19,7 @@ describe('app registry', () => {
 
     expect(starboard).toMatchObject({
       status: 'live',
-      liveUrl: 'https://thevault.github.io/starboard/',
+      liveUrl: 'https://nathanielwilcox.github.io/natesvault.github.io/starboard/',
     })
     expect(starboard?.exampleNotice).toMatch(/not a real product/i)
   })

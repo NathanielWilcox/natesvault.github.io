@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import {
   HashRouter,
   Link,
@@ -97,8 +97,27 @@ function HomePage() {
 function AppDetailPage() {
   const { id } = useParams()
   const app = apps.find((entry) => entry.id === id)
+  const [commandsVisible, setCommandsVisible] = useState(false)
+  const [copyStatus, setCopyStatus] = useState('')
 
   if (!app) return <NotFoundPage />
+
+  const commandsToCopy = app.localRun.join('\n')
+
+  async function copyRunCommands() {
+    if (!navigator.clipboard?.writeText) {
+      setCopyStatus('Clipboard access is unavailable. Select and copy the commands instead.')
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(commandsToCopy)
+      setCopyStatus('Commands copied.')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown clipboard error'
+      setCopyStatus(`Could not copy commands: ${message}`)
+    }
+  }
 
   return (
     <main className="page-shell detail-shell">
@@ -123,19 +142,50 @@ function AppDetailPage() {
           </section>
           <section className="metadata-card">
             <h2>Run locally</h2>
-            <p className="muted-copy">These instructions are for the app repository, not The Vault.</p>
-            <pre className="command-block"><code>{app.localRun.join('\n')}</code></pre>
+            <p className="muted-copy">Run these commands from the repository root. The Vault cannot execute them for you.</p>
+            {app.localRun.length > 0 ? (
+              <>
+                <button
+                  aria-controls="run-commands"
+                  aria-expanded={commandsVisible}
+                  className="button button-quiet"
+                  onClick={() => setCommandsVisible((visible) => !visible)}
+                  type="button"
+                >
+                  {commandsVisible ? 'Hide commands' : 'Show commands'}
+                </button>
+                {commandsVisible && (
+                  <div id="run-commands" className="run-commands">
+                    <pre className="command-block"><code>{app.localRun.join('\n')}</code></pre>
+                    <button className="button button-quiet" onClick={copyRunCommands} type="button">
+                      Copy commands
+                    </button>
+                    {copyStatus && <p role="status" className="muted-copy">{copyStatus}</p>}
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="muted-copy">No local run commands are configured yet.</p>
+            )}
           </section>
         </div>
         <div className="detail-actions">
           <Link className="button button-quiet" to={`/apps/${app.id}/docs`}>Read documentation</Link>
           {app.liveUrl ? (
             <a className="button button-primary" href={app.liveUrl} target="_blank" rel="noopener noreferrer">
-              Launch externally ↗
+              Launch app ↗
             </a>
+          ) : app.localRun.length > 0 ? (
+            <button
+              className="button button-primary"
+              onClick={() => setCommandsVisible(true)}
+              type="button"
+            >
+              Run locally
+            </button>
           ) : (
-            <button className="button button-disabled" disabled title="No external launch URL is configured">
-              Launch unavailable
+            <button className="button button-disabled" disabled title="No live URL or local run commands are configured">
+              No launch available
             </button>
           )}
         </div>

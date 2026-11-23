@@ -8,7 +8,7 @@ from the Vault UI.
 ## Repository layout
 
 - `apps/` contains one folder per catalog entry, including its `README.md` and optional static client-side app source.
-- `site/` contains the Vite, React, and TypeScript site deployed to the repository's GitHub Pages root site.
+- `site/` contains the Vite, React, and TypeScript site deployed to `https://nathanielwilcox.github.io/natesvault.github.io/`.
 - `.github/workflows/deploy.yml` builds `site/` and deploys `site/dist` on pushes to `main` and on manual dispatch.
 
 ## Add an app
@@ -22,9 +22,12 @@ from the Vault UI.
 ## Configure a live app URL
 
 Set `liveUrl` in the registry entry to the deployed app's HTTPS URL. The Launch
-button opens that URL in a new tab. Do not set a URL until a deployment exists.
-Apps may be deployed as separate static assets, including under a GitHub Pages
-subpath. The deploy workflow publishes Starboard under `/starboard/` alongside
+button opens that URL in a new tab. If no `liveUrl` exists, Launch displays the
+app's `localRun` commands with a copy button. Browsers cannot execute shell
+commands on a visitor's computer. Do not set a URL until a deployment exists.
+Apps may be deployed as separate static assets under a GitHub Pages subpath.
+The deploy workflow publishes Starboard at
+`https://nathanielwilcox.github.io/natesvault.github.io/starboard/` alongside
 the Vault site. The Vault does not embed or execute app implementations.
 
 Starboard is a template/example, not a real product. Its deployed counter is

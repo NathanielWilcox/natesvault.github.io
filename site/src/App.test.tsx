@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { App } from './App'
 import { apps } from './apps.registry'
 
@@ -11,6 +11,7 @@ function renderAt(path: string) {
 describe('Vault routes', () => {
   afterEach(() => {
     window.location.hash = ''
+    vi.unstubAllGlobals()
   })
 
   it('shows every app and its registry status on the overview', () => {
@@ -31,16 +32,22 @@ describe('Vault routes', () => {
     expect(screen.getByRole('heading', { name: app.name })).toBeInTheDocument()
     expect(screen.getByText(app.description)).toBeInTheDocument()
     expect(screen.getByText(app.repoPath)).toBeInTheDocument()
-    expect(screen.getByText(app.localRun.join('\n'))).toBeInTheDocument()
 
     for (const technology of app.techStack) {
       expect(screen.getByText(technology)).toBeInTheDocument()
     }
 
     if (app.liveUrl) {
-      expect(screen.getByRole('link', { name: /Launch externally/ })).toHaveAttribute('href', app.liveUrl)
+      expect(screen.getByRole('link', { name: /Launch app/ })).toHaveAttribute('href', app.liveUrl)
+      if (app.localRun.length > 0) {
+        expect(screen.getByRole('button', { name: 'Show commands' })).toBeInTheDocument()
+      } else {
+        expect(screen.getByText('No local run commands are configured yet.')).toBeInTheDocument()
+      }
+    } else if (app.localRun.length > 0) {
+      expect(screen.getByRole('button', { name: 'Show commands' })).toBeInTheDocument()
     } else {
-      expect(screen.getByRole('button', { name: 'Launch unavailable' })).toBeDisabled()
+      expect(screen.getByRole('button', { name: 'No launch available' })).toBeDisabled()
     }
   })
 
@@ -57,28 +64,88 @@ describe('Vault routes', () => {
 
     expect(screen.getByRole('heading', { name: 'Starboard' })).toBeInTheDocument()
     expect(screen.getByText(/Starboard is not a real product/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Launch externally/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Launch app/ })).toHaveAttribute(
       'href',
-      'https://thevault.github.io/starboard/',
+      'https://nathanielwilcox.github.io/natesvault.github.io/starboard/',
     )
   })
 
-  it('adds an external launch link only when a live URL exists', () => {
+  it('shows and copies local commands separately from the deployed app link', async () => {
     const starboard = apps.find((app) => app.id === 'starboard')
     if (!starboard) throw new Error('Starboard registry entry is missing')
 
-    const originalLiveUrl = starboard.liveUrl
-    starboard.liveUrl = 'https://starboard.example.test'
+    const commands = starboard.localRun.join('\n')
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    const navigatorStub = Object.create(navigator) as Navigator
+    Object.defineProperty(navigatorStub, 'clipboard', { value: { writeText } })
+    vi.stubGlobal('navigator', navigatorStub)
+
+    renderAt('/apps/starboard')
+    fireEvent.click(screen.getByRole('button', { name: 'Show commands' }))
+    expect(screen.getByText(/npm ci --prefix site/)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Copy commands' }))
+
+    expect(await screen.findByRole('status')).toHaveTextContent('Commands copied.')
+    expect(writeText).toHaveBeenCalledWith(commands)
+  })
+
+  it('uses the Launch action to reveal commands when no live URL exists', () => {
+    const fieldNotes = apps.find((app) => app.id === 'field-notes')
+    if (!fieldNotes) throw new Error('Field Notes registry entry is missing')
+
+    const originalCommands = fieldNotes.localRun
+    fieldNotes.localRun = ['npm run dev', 'sh ./run.sh']
+    try {
+      renderAt('/apps/field-notes')
+      fireEvent.click(screen.getByRole('button', { name: 'Run locally' }))
+
+      expect(screen.getByText(/npm run dev/)).toHaveTextContent('npm run dev sh ./run.sh')
+    } finally {
+      fieldNotes.localRun = originalCommands
+    }
+  })
+
+  it('shows clipboard errors instead of claiming commands were copied', async () => {
+    const starboard = apps.find((app) => app.id === 'starboard')
+    if (!starboard) throw new Error('Starboard registry entry is missing')
+
+    const writeText = vi.fn().mockRejectedValue(new Error('Permission denied'))
+    const navigatorStub = Object.create(navigator) as Navigator
+    Object.defineProperty(navigatorStub, 'clipboard', { value: { writeText } })
+    vi.stubGlobal('navigator', navigatorStub)
+
     try {
       renderAt('/apps/starboard')
-      expect(screen.getByRole('link', { name: /Launch externally/ })).toHaveAttribute(
-        'href',
-        starboard.liveUrl,
-      )
+      fireEvent.click(screen.getByRole('button', { name: 'Show commands' }))
+      fireEvent.click(screen.getByRole('button', { name: 'Copy commands' }))
+      expect(await screen.findByRole('status')).toHaveTextContent('Could not copy commands: Permission denied')
     } finally {
-      if (originalLiveUrl) starboard.liveUrl = originalLiveUrl
-      else delete starboard.liveUrl
     }
+  })
+
+  it('explains when clipboard access is unavailable', async () => {
+    renderAt('/apps/starboard')
+    fireEvent.click(screen.getByRole('button', { name: 'Show commands' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Copy commands' }))
+
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Clipboard access is unavailable. Select and copy the commands instead.',
+    )
+  })
+
+  it('reports an unknown clipboard error explicitly', async () => {
+    const writeText = vi.fn().mockRejectedValue('clipboard rejected')
+    const navigatorStub = Object.create(navigator) as Navigator
+    Object.defineProperty(navigatorStub, 'clipboard', { value: { writeText } })
+    vi.stubGlobal('navigator', navigatorStub)
+
+    renderAt('/apps/starboard')
+    fireEvent.click(screen.getByRole('button', { name: 'Show commands' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Copy commands' }))
+
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Could not copy commands: Unknown clipboard error',
+    )
   })
 
   it('reports a missing README for a registered app', () => {

@@ -26,8 +26,11 @@ export const apps: VaultApp[] = [
     repoPath: 'apps/starboard',
     docsPath: 'apps/starboard/README.md',
     techStack: ['HTML', 'CSS', 'JavaScript'],
-    localRun: ['# Static demo is deployed by the GitHub Pages workflow.'],
-    liveUrl: 'https://thevault.github.io/starboard/',
+    localRun: [
+      'npm ci --prefix site',
+      'node site/node_modules/vite/bin/vite.js apps/starboard --base=/ --host=127.0.0.1',
+    ],
+    liveUrl: 'https://nathanielwilcox.github.io/natesvault.github.io/starboard/',
     exampleNotice: 'Template/example only — Starboard is not a real product.',
   },
   {
@@ -40,6 +43,6 @@ export const apps: VaultApp[] = [
     repoPath: 'apps/field-notes',
     docsPath: 'apps/field-notes/README.md',
     techStack: ['TypeScript', 'Vite'],
-    localRun: ['# No runnable implementation yet; this project is in progress.'],
+    localRun: [],
   },
 ]
