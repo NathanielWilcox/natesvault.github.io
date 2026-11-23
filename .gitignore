@@ -1,0 +1,6 @@
+site/node_modules/
+site/dist/
+
+# Editor and OS files
+.DS_Store
+*.log
