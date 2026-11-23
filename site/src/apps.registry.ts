@@ -12,21 +12,22 @@ export interface VaultApp {
   techStack: string[]
   localRun: string[]
   liveUrl?: string
+  placeholderUrl?: string
 }
 
 export const apps: VaultApp[] = [
   {
     id: 'starboard',
     name: 'Starboard',
-    description: 'A lightweight launchpad for organizing personal projects and useful links.',
+    description: 'A template/example site only; Starboard is not a real product.',
     icon: '🚀',
-    status: 'live',
+    status: 'planned',
     tags: ['productivity', 'dashboard', 'sample'],
     repoPath: 'apps/starboard',
     docsPath: 'apps/starboard/README.md',
     techStack: ['React', 'TypeScript', 'Vite'],
-    localRun: ['# Illustrative only: this catalog sample has no runnable source.'],
-    liveUrl: 'https://example.com/',
+    localRun: ['# Template/example only; no runnable product exists.'],
+    placeholderUrl: 'https://example.com/',
   },
   {
     id: 'field-notes',

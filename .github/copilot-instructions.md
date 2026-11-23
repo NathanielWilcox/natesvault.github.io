@@ -50,6 +50,13 @@ if the user says "normal mode."
   `import.meta.glob(..., { query: '?raw', eager: true })`. No runtime fetch.
 - **All apps visible** with status badges: `planned | in-progress | live`.
 - **External links only** for running apps. The Vault never executes them.
+- **Test every app and page:** registry-driven tests must cover each app's detail
+  and docs routes. Add focused tests for every new page or route behavior.
+- **Enforce per-page coverage:** keep each page component in
+  `site/vite.config.ts` coverage thresholds. New page components need their
+  own thresholds and tests; do not rely only on aggregate workspace coverage.
+- **Run coverage checks:** `cd site && npm run test:coverage` must pass before
+  considering app or page changes complete. The deployment workflow runs it.
 - **No new dependency** without one line explaining why it is needed.
 
 ## 5. Overrides (brevity loses to these)

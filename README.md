@@ -21,8 +21,9 @@ local-run instructions. The Vault does not run or host the listed apps.
 
 Set `liveUrl` in the registry entry to the externally hosted app's HTTPS URL.
 The Launch button opens that URL in a new tab; it does not start the app. Do not
-set a URL until an external deployment exists. The Starboard sample uses
-`https://example.com/` as a clearly labeled placeholder.
+set a URL until an external deployment exists. Starboard is a template/example,
+not a real product; its `https://example.com/` URL is plain-text placeholder
+metadata and is not a launch link.
 
 ## Run the site
 
@@ -33,3 +34,21 @@ npm run dev
 ```
 
 The site uses HashRouter so app and documentation routes work on GitHub Pages.
+
+## Test the site
+
+```sh
+cd site
+npm test
+npm run test:coverage
+```
+
+Vitest runs the site tests. Coverage includes all TypeScript and TSX source
+files except the browser entry point and test setup. Vitest, jsdom, Testing
+Library, and V8 coverage are dev-only tools for rendering UI tests and
+measuring source coverage.
+
+Every registry entry is tested through its detail and documentation routes.
+When adding an app, page, or route, add focused behavior tests and set
+per-component coverage thresholds in `site/vite.config.ts`. Run
+`npm run test:coverage` before merging; deployment runs the same check.
