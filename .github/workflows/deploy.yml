@@ -33,6 +33,10 @@ jobs:
       - name: Build site
         run: npm run build
         working-directory: site
+      - name: Verify project-page asset paths
+        run: |
+          grep -q 'src="./assets/' site/dist/index.html
+          grep -q 'href="./assets/' site/dist/index.html
       - name: Test site with coverage
         run: npm run test:coverage
         working-directory: site
