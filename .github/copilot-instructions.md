@@ -41,20 +41,28 @@ if the user says "normal mode."
 - **Offer one next step at a time** when multiple actions exist. [reference:14]
 
 ## 4. Project guardrails (non-negotiable)
-- **Static only.** Deployed to GitHub Pages at `thevault.github.io`. No
-  server-side rendering, no Python runtime, no Docker at serve time.
+- **Static only.** Deployed to GitHub Pages at
+  `nathanielwilcox.github.io/natesvault.github.io/`. No server-side rendering,
+  no Python runtime, no Docker at serve time.
 - **Stack:** Vite + React + TypeScript (strict). `HashRouter` for SPA routing.
 - **Single source of truth:** `site/src/apps.registry.ts`. Nav tabs, home
   cards, detail pages, and docs all derive from it. Never hard-code app names.
 - **Docs:** render each `apps/<name>/README.md` at build time via
   `import.meta.glob(..., { query: '?raw', eager: true })`. No runtime fetch.
+- **Apps may have static client-side implementations** under `apps/<name>/`.
+  Build and deploy them as static assets, separately from the Vault UI. Include
+  their output in the Pages artifact. The Vault navigates through `liveUrl`;
+  it does not execute them in-page.
 - **All apps visible** with status badges: `planned | in-progress | live`.
-- **External links only** for running apps. The Vault never executes them.
+- **Launch links only** for running apps. The Vault never embeds or executes them.
+- **Launch behavior:** open `liveUrl` when present. Otherwise, show configured
+  `localRun` commands with a copy option; never execute shell commands in-browser.
 - **Test every app and page:** registry-driven tests must cover each app's detail
   and docs routes. Add focused tests for every new page or route behavior.
 - **Enforce per-page coverage:** keep each page component in
   `site/vite.config.ts` coverage thresholds. New page components need their
-  own thresholds and tests; do not rely only on aggregate workspace coverage.
+  own thresholds and tests. Include app source under `apps/` in coverage;
+  do not rely only on aggregate workspace coverage.
 - **Run coverage checks:** `cd site && npm run test:coverage` must pass before
   considering app or page changes complete. The deployment workflow runs it.
 - **No new dependency** without one line explaining why it is needed.
@@ -87,10 +95,10 @@ Then verify: if the user reads only the first and last line, do they know
 
 # Repository instructions
 
-- Keep the Vite site in `site/`; app folders under `apps/` are catalog and documentation entries only.
+- Keep the Vite catalog site in `site/`; app folders under `apps/` may also contain separate static client-side app implementations.
 - Use strict TypeScript and functional React components.
 - Keep the deployed site fully static. Do not add backend calls, server-side rendering, databases, authentication, Python, or Docker runtime requirements.
 - Treat `site/src/apps.registry.ts` as the single source of app metadata. Build navigation, cards, and detail routes from the registry.
 - Keep app documentation in each app folder's `README.md`; bundle it into the site at build time.
-- The Vault only links to external app instances or displays local-run instructions. Never execute an app from The Vault.
+- The Vault links to separately hosted app instances or displays local-run instructions. Never embed or execute an app inside The Vault.
 - Only show an external launch action when a registry entry has a `liveUrl`.

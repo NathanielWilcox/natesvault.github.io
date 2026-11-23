@@ -1,31 +1,30 @@
 # Starboard
 
-> **Template/example only.** Starboard is not a real product or deployed app.
-> `https://example.com/` is a placeholder URL, not a launch destination.
+> **Template/example only.** Starboard is not a real product.
+> The Vault links to a deployed counter demo so its Launch flow can be tested.
 
-This folder demonstrates how a project can appear in The Vault catalog.
+This folder contains a small static counter demo used to test The Vault's
+separate-app launch flow. It is an example, not a real Starboard product.
 
 ## Features
 
-- Organize shortcuts into useful groups.
-- Keep a lightweight overview of personal projects.
-- Use a responsive interface on desktop or mobile.
+- Increase, decrease, and reset a counter.
+- Use semantic buttons and an announced count.
+- Run as static HTML, CSS, and JavaScript.
 
-## Local run example
-
-```sh
-# Add app source and package scripts before running this sample.
-```
-
-This folder is a documentation-only template/example entry, not a runnable app.
+The Launch button opens the static counter demo deployed at
+`https://nathanielwilcox.github.io/natesvault.github.io/starboard/`.
+To run it locally, open PowerShell or a terminal at the repository root and
+select **Show commands** on the app details page. Run the displayed commands
+there. The Vault can display and copy commands, but browsers cannot execute them.
 
 | Area | Current example |
 | --- | --- |
-| Status | Planned (template/example) |
-| Stack | React, TypeScript, Vite |
-| Hosting | Not configured; the URL above is a placeholder |
+| Status | Live demo (template/example) |
+| Stack | HTML, CSS, JavaScript |
+| Hosting | GitHub Pages at `/natesvault.github.io/starboard/` |
 
-> The Vault lists this project. It does not run or host Starboard.
+> The Vault keeps this app separate from the catalog UI and links to its static deployment.
 
 ## Links
 

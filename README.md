@@ -1,13 +1,14 @@
 # The Vault
 
 The Vault is a static monorepo front door for independent apps. It catalogs
-projects, displays their documentation, and links to external deployments or
-local-run instructions. The Vault does not run or host the listed apps.
+projects, displays their documentation, and links to separately deployed
+static apps or local-run instructions. App implementations remain independent
+from the Vault UI.
 
 ## Repository layout
 
-- `apps/` contains one folder per catalog entry. Each folder includes a `README.md`; GitHub Pages does not build these apps.
-- `site/` contains the Vite, React, and TypeScript site deployed to the repository's GitHub Pages root site.
+- `apps/` contains one folder per catalog entry, including its `README.md` and optional static client-side app source.
+- `site/` contains the Vite, React, and TypeScript site deployed to `https://nathanielwilcox.github.io/natesvault.github.io/`.
 - `.github/workflows/deploy.yml` builds `site/` and deploys `site/dist` on pushes to `main` and on manual dispatch.
 
 ## Add an app
@@ -16,14 +17,21 @@ local-run instructions. The Vault does not run or host the listed apps.
 2. Add one typed entry to `site/src/apps.registry.ts`. Use a unique `id` and fill in the name, description, icon, status, tags, `repoPath`, `docsPath`, `techStack`, and `localRun`.
 3. Set `status` to `planned`, `in-progress`, or `live`. A `live` entry is launchable only when it has a `liveUrl`.
 4. Confirm the docs path is `apps/<id>/README.md`. The site bundles these files from `site/src` at build time.
+5. Add the app's built static files to the Pages artifact in `.github/workflows/deploy.yml`.
 
-## Configure an external live URL
+## Configure a live app URL
 
-Set `liveUrl` in the registry entry to the externally hosted app's HTTPS URL.
-The Launch button opens that URL in a new tab; it does not start the app. Do not
-set a URL until an external deployment exists. Starboard is a template/example,
-not a real product; its `https://example.com/` URL is plain-text placeholder
-metadata and is not a launch link.
+Set `liveUrl` in the registry entry to the deployed app's HTTPS URL. The Launch
+button opens that URL in a new tab. If no `liveUrl` exists, Launch displays the
+app's `localRun` commands with a copy button. Browsers cannot execute shell
+commands on a visitor's computer. Do not set a URL until a deployment exists.
+Apps may be deployed as separate static assets under a GitHub Pages subpath.
+The deploy workflow publishes Starboard at
+`https://nathanielwilcox.github.io/natesvault.github.io/starboard/` alongside
+the Vault site. The Vault does not embed or execute app implementations.
+
+Starboard is a template/example, not a real product. Its deployed counter is
+for testing the Launch flow.
 
 ## Run the site
 

@@ -143,6 +143,9 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
 .muted-copy { margin: 8px 0 14px; color: var(--muted); font-size: 11px; }
 .command-block { overflow-x: auto; margin: 0; padding: 13px; color: #d7e8ba; background: #11151b; border: 1px solid #2a303a; border-radius: 7px; font: 11px/1.8 'DM Mono', monospace; }
 .command-block code { font: inherit; }
+.run-commands { margin-top: 12px; }
+.run-commands > .button { margin-top: 10px; }
+.run-commands [role="status"] { margin-bottom: 0; }
 .detail-actions { margin-top: 17px; }
 .detail-hosting-note { padding-top: 15px; border-top: 1px solid var(--line); line-height: 1.6; }
 .repo-path { margin: 25px 0 0; color: var(--subtle); font-size: 11px; }
